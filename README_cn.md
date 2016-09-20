@@ -64,12 +64,16 @@ $ cd $GOPATH/src/imgo
 $ go get ./...
 ```
 
-2.安装router、logic、comet、job模块(配置文件请依据实际机器环境配置)
+2.安装message、router、logic、comet、job模块(配置文件请依据实际机器环境配置)
 ```sh
 $ cd $GOPATH/src/imgo/router
 $ go install
-$ cp router-example.conf $GOPATH/bin/router.conf
+$ cp router.conf $GOPATH/bin/router.conf
 $ cp router-log.xml $GOPATH/bin/
+$ cd ../message/
+$ go install
+$ cp message.conf $GOPATH/bin/message.conf
+$ cp message-log.xml $GOPATH/bin/
 $ cd ../logic/
 $ go install
 $ cp logic-example.conf $GOPATH/bin/logic.conf
@@ -88,6 +92,7 @@ $ cp job-log.xml $GOPATH/bin/
 ### 五、启动imgo
 ```sh
 $ cd /$GOPATH/bin
+$ nohup $GOPATH/bin/message -c $GOPATH/bin/message.conf 2>&1 > /data/logs/imgo/panic-message.log &
 $ nohup $GOPATH/bin/router -c $GOPATH/bin/router.conf 2>&1 > /data/logs/imgo/panic-router.log &
 $ nohup $GOPATH/bin/logic -c $GOPATH/bin/logic.conf 2>&1 > /data/logs/imgo/panic-logic.log &
 $ nohup $GOPATH/bin/comet -c $GOPATH/bin/comet.conf 2>&1 > /data/logs/imgo/panic-comet.log &

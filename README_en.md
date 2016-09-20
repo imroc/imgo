@@ -55,6 +55,10 @@ $ cd $GOPATH/src/imgo/router
 $ go install
 $ cp router-example.conf $GOPATH/bin/router.conf
 $ cp router-log.xml $GOPATH/bin/
+$ cd ../message/
+$ go install
+$ cp message.conf $GOPATH/bin/message.conf
+$ cp message-log.xml $GOPATH/bin/
 $ cd ../logic/
 $ go install
 $ cp logic-example.conf $GOPATH/bin/logic.conf
@@ -75,6 +79,7 @@ Everything is DONE!
 You may need to change the log files location.
 ```sh
 $ cd /$GOPATH/bin
+$ nohup $GOPATH/bin/message -c $GOPATH/bin/message.conf 2>&1 > /data/logs/imgo/panic-message.log &
 $ nohup $GOPATH/bin/router -c $GOPATH/bin/router.conf 2>&1 > /data/logs/imgo/panic-router.log &
 $ nohup $GOPATH/bin/logic -c $GOPATH/bin/logic.conf 2>&1 > /data/logs/imgo/panic-logic.log &
 $ nohup $GOPATH/bin/comet -c $GOPATH/bin/comet.conf 2>&1 > /data/logs/imgo/panic-comet.log &
