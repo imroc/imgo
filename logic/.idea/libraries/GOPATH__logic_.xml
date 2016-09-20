@@ -1,0 +1,42 @@
+<component name="libraryTable">
+  <library name="GOPATH &lt;logic&gt;">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../../gin" />
+      <root url="file://$USER_HOME$/data/golang/src/gopush-cluster" />
+      <root url="file://$USER_HOME$/data/golang/src/github.com2" />
+      <root url="file://$USER_HOME$/data/golang/src/code.google.com" />
+      <root url="file://$USER_HOME$/data/golang/src/gopkg.in" />
+      <root url="file://$PROJECT_DIR$/../../test" />
+      <root url="file://$PROJECT_DIR$/../../../../lib/src/golang.org" />
+      <root url="file://$PROJECT_DIR$/../../.idea" />
+      <root url="file://$PROJECT_DIR$/../../../../lib/src/github.com" />
+      <root url="file://$PROJECT_DIR$/../../spider_lib" />
+      <root url="file://$PROJECT_DIR$/../../../../lib/src/git.eclipse.org" />
+      <root url="file://$PROJECT_DIR$/.." />
+      <root url="file://$PROJECT_DIR$/../../../../lib/src/gopkg.in" />
+      <root url="file://$PROJECT_DIR$/../../gopush-cluster2" />
+      <root url="file://$PROJECT_DIR$/../../positioning" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../../gin" />
+      <root url="file://$USER_HOME$/data/golang/src/gopush-cluster" />
+      <root url="file://$USER_HOME$/data/golang/src/github.com2" />
+      <root url="file://$USER_HOME$/data/golang/src/code.google.com" />
+      <root url="file://$USER_HOME$/data/golang/src/gopkg.in" />
+      <root url="file://$PROJECT_DIR$/../../test" />
+      <root url="file://$PROJECT_DIR$/../../../../lib/src/golang.org" />
+      <root url="file://$PROJECT_DIR$/../../.idea" />
+      <root url="file://$PROJECT_DIR$/../../../../lib/src/github.com" />
+      <root url="file://$PROJECT_DIR$/../../spider_lib" />
+      <root url="file://$PROJECT_DIR$/../../../../lib/src/git.eclipse.org" />
+      <root url="file://$PROJECT_DIR$/.." />
+      <root url="file://$PROJECT_DIR$/../../../../lib/src/gopkg.in" />
+      <root url="file://$PROJECT_DIR$/../../gopush-cluster2" />
+      <root url="file://$PROJECT_DIR$/../../positioning" />
+    </SOURCES>
+    <excluded>
+      <root url="file://$PROJECT_DIR$" />
+    </excluded>
+  </library>
+</component>
