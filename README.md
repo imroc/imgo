@@ -1,6 +1,6 @@
 imgo
 ==============
-imgo is a push/IM server writen by golang.
+imgo is a push/IM server writen by golang based on goim.
 
 ## Features
  * Light weight
