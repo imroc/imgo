@@ -14,35 +14,12 @@ import (
 func StartHTTP() {
 	// external
 	httpServeMux := http.NewServeMux()
-	// 2
-	//httpServeMux.HandleFunc("/2/server/get", GetServer2)
 	// 1.0
-	//httpServeMux.HandleFunc("/1/server/get", GetServer)
 	httpServeMux.HandleFunc("/1/msg/get", GetOfflineMsg)
-	//httpServeMux.HandleFunc("/1/time/get", GetTime)
-	// old
-	//httpServeMux.HandleFunc("/server/get", GetServer0)
-	httpServeMux.HandleFunc("/msg/get", GetOfflineMsg0)
-	//httpServeMux.HandleFunc("/time/get", GetTime0)
-	// internal
-	//httpAdminServeMux := http.NewServeMux()
-	// 1.0
-	//httpAdminServeMux.HandleFunc("/1/admin/push/private", PushPrivate)
-	//httpAdminServeMux.HandleFunc("/1/admin/push/mprivate", PushMultiPrivate)
-	//httpAdminServeMux.HandleFunc("/1/admin/msg/del", DelPrivate)
-	//httpAdminServeMux.HandleFunc("/1/admin/token/new", NewTokenPrivate)
-	// old
-	//httpAdminServeMux.HandleFunc("/admin/push", PushPrivate)
-	//httpAdminServeMux.HandleFunc("/admin/msg/clean", DelPrivate)
-
 	for _, bind := range Conf.HttpBind {
 		log.Info("start http listen addr:\"%s\"", bind)
 		go httpListen(httpServeMux, bind)
 	}
-	//for _, bind := range Conf.AdminBind {
-	//log.Info("start admin http listen addr:\"%s\"", bind)
-	//go httpListen(httpAdminServeMux, bind)
-	//}
 }
 
 func httpListen(mux *http.ServeMux, bind string) {
@@ -81,19 +58,3 @@ func retWrite(w http.ResponseWriter, r *http.Request, res map[string]interface{}
 	}
 	log.Info("req: \"%s\", res:\"%s\", ip:\"%s\", time:\"%fs\"", r.URL.String(), dataStr, r.RemoteAddr, time.Now().Sub(start).Seconds())
 }
-
-// retPWrite marshal the result and write to client(post).
-//func retPWrite(w http.ResponseWriter, r *http.Request, res map[string]interface{}, body *string, start time.Time) {
-//data, err := json.Marshal(res)
-//if err != nil {
-//log.Error("json.Marshal(\"%v\") error(%v)", res, err)
-//return
-//}
-//dataStr := string(data)
-//if n, err := w.Write([]byte(dataStr)); err != nil {
-//log.Error("w.Write(\"%s\") error(%v)", dataStr, err)
-//} else {
-//log.Debug("w.Write(\"%s\") write %d bytes", dataStr, n)
-//}
-//log.Info("req: \"%s\", post: \"%s\", res:\"%s\", ip:\"%s\", time:\"%fs\"", r.URL.String(), *body, dataStr, r.RemoteAddr, time.Now().Sub(start).Seconds())
-//}

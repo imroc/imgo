@@ -103,7 +103,6 @@ func disconnect(userID int64, seq, roomId int32) (has bool, err error) {
 		log.Error("getRouterByUID(%d),error(%v)", userID, err)
 		return
 	}
-	log.Debug("ready to delete info on router:%v", args)
 	if err = client.Call(routerServiceDel, &args, &reply); err != nil {
 		log.Error("c.Call(\"%s\",\"%v\") error(%v)", routerServiceDel, args, err)
 	} else {

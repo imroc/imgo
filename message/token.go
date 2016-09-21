@@ -2,11 +2,6 @@ package main
 
 import "fmt"
 
-//type Token struct {
-//Key, Value string
-//Expire     int64
-//}
-
 // format the key
 func formatUidKey(uid int64) string {
 	return fmt.Sprintf("uid_%d", uid)

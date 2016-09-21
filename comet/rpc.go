@@ -52,7 +52,6 @@ func (this *PushRPC) Ping(arg *proto.NoArg, reply *proto.NoReply) error {
 
 // Push push a message to a specified sub key
 func (this *PushRPC) PushMsg(arg *proto.PushMsgArg, reply *proto.NoReply) (err error) {
-	log.Debug("PushRPC.PushMsg(%v)", arg)
 	var (
 		bucket  *Bucket
 		channel *Channel
@@ -70,7 +69,6 @@ func (this *PushRPC) PushMsg(arg *proto.PushMsgArg, reply *proto.NoReply) (err e
 
 // Push push a message to a specified sub key
 func (this *PushRPC) MPushMsg(arg *proto.MPushMsgArg, reply *proto.MPushMsgReply) (err error) {
-	log.Debug("MPushMsgArg:%v", arg)
 	var (
 		bucket  *Bucket
 		channel *Channel
@@ -85,9 +83,7 @@ func (this *PushRPC) MPushMsg(arg *proto.MPushMsgArg, reply *proto.MPushMsgReply
 	for n, key = range arg.Keys {
 		bucket = DefaultServer.Bucket(key)
 		if channel = bucket.Channel(key); channel != nil {
-			log.Debug("ready to push,arg.P=%v", arg.P)
 			if err = channel.Push(&arg.P); err != nil {
-				log.Debug("push err:%v", err)
 				return
 			}
 			reply.Index = int32(n)

@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"imgo/id"
 	inet "imgo/libs/net"
 	"imgo/libs/proto"
@@ -81,7 +80,6 @@ func retPWrite(w http.ResponseWriter, r *http.Request, res map[string]interface{
 }
 
 func Push(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("start to push")
 	if r.Method != "POST" {
 		http.Error(w, "Method Not Allowed", 405)
 		return
@@ -120,10 +118,8 @@ func Push(w http.ResponseWriter, r *http.Request) {
 
 	//从router中找出userId对应的连接地址
 	subKeys = genSubKey(userId)
-	fmt.Printf("ready to push message to keys:%v\n", subKeys)
 
 	if len(subKeys) == 0 { //用户不在线,将消息存入离线消息系统
-		fmt.Printf("userId为%s的用户不在线,将其存入离线消息系统.消息内容:%s\n", uidStr, string(bodyBytes))
 		args := proto.MessageSavePrivateArgs{
 			Key:    uidStr,
 			Msg:    json.RawMessage(bodyBytes),
@@ -142,9 +138,7 @@ func Push(w http.ResponseWriter, r *http.Request) {
 
 	//向userId对应的连接地址发消息,消息先放入kafka队列
 	for serverId, keys = range subKeys {
-		fmt.Printf("push message to kafka,serverId=%d,keys=%v,content=%s\n", serverId, keys, string(bodyBytes))
 		if err = mpushKafka(serverId, keys, bodyBytes); err != nil {
-			fmt.Printf("push failed,error(%v)\n", err)
 			res["ret"] = InternalErr
 			return
 		}

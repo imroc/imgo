@@ -143,7 +143,6 @@ func (server *Server) serveWebsocket(conn *websocket.Conn, tr *itime.Timer) {
 			break
 		}
 		if err = p.ReadWebsocket(conn); err != nil {
-			log.Debug("read websocket failed,proto=%v,err=%v", p, err)
 			break
 		}
 		//p.Time = *globalNowTime
@@ -195,17 +194,13 @@ func (server *Server) dispatchWebsocket(key string, conn *websocket.Conn, ch *Ch
 			}
 			goto failed
 		case proto.ProtoReady:
-			log.Debug("case proto ready")
 			for {
 				if p, err = ch.CliProto.Get(); err != nil {
-					log.Debug("ch.CliProto.Get() err=%v", err)
 					err = nil // must be empty error
 					break
 				}
-				log.Debug("write to websocket,key=%s,proto=%v", key, p)
 				if err = p.WriteWebsocket(conn); err != nil {
 					//TODO save failed message to redis
-					log.Debug("write websocket failed,key=%s,proto=%v,err=%v", key, p, err)
 					goto failed
 				}
 				p.Body = nil // avoid memory leak

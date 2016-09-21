@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"imgo/libs/define"
 	"imgo/libs/encoding/binary"
 	"imgo/libs/proto"
@@ -50,7 +49,6 @@ func handleError() {
 	)
 	for {
 		err = <-producer.Errors()
-		fmt.Printf("kafka error happens ....  ..")
 		if err != nil {
 			log.Error("producer message error, partition:%d offset:%d key:%v valus:%s error(%v)", err.Msg.Partition, err.Msg.Offset, err.Msg.Key, err.Msg.Value, err.Err)
 		}

@@ -43,10 +43,8 @@ func push(msg []byte) (err error) {
 		log.Error("json.Unmarshal(%s) error(%s)", msg, err)
 		return
 	}
-	log.Debug("msg is %v", m)
 	switch m.OP {
 	case define.KAFKA_MESSAGE_MULTI:
-		log.Debug("push muti %v", m)
 		pushChs[rand.Int()%Conf.PushChan] <- &pushArg{ServerId: m.ServerId, SubKeys: m.SubKeys, Msg: m.Msg, RoomId: define.NoRoom}
 	case define.KAFKA_MESSAGE_BROADCAST:
 		broadcast(m.Msg)

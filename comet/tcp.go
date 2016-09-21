@@ -235,9 +235,7 @@ func (server *Server) dispatchTCP(key string, conn *net.TCPConn, wr *bufio.Write
 				if white {
 					DefaultWhitelist.Log.Printf("key: %s start write client proto%v\n", key, p)
 				}
-				log.Debug("ProtoReady,proto=%v,ready to p.WriteTCP", p)
 				if err = p.WriteTCP(wr); err != nil {
-					log.Debug("failed to p.WriteTCP,err=%v", err)
 					goto failed
 				}
 				if white {

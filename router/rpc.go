@@ -58,15 +58,12 @@ func (r *RouterRPC) Ping(arg *proto.NoArg, reply *proto.NoReply) error {
 }
 
 func (r *RouterRPC) Put(arg *proto.PutArg, reply *proto.PutReply) error {
-	log.Debug("RouterRPC.Put(%v)", arg)
 	reply.Seq = r.bucket(arg.UserId).Put(arg.UserId, arg.Server, arg.RoomId)
 	return nil
 }
 
 func (r *RouterRPC) Del(arg *proto.DelArg, reply *proto.DelReply) error {
-	log.Debug("delete user:%v", arg)
 	reply.Has = r.bucket(arg.UserId).Del(arg.UserId, arg.Seq, arg.RoomId)
-	log.Debug("has:%v", reply.Has)
 	return nil
 }
 
@@ -82,7 +79,6 @@ func (r *RouterRPC) DelServer(arg *proto.DelServerArg, reply *proto.NoReply) err
 
 func (r *RouterRPC) Get(arg *proto.GetArg, reply *proto.GetReply) error {
 	reply.Seqs, reply.Servers = r.bucket(arg.UserId).Get(arg.UserId)
-	log.Debug("RouterRPC.Get(%v):%v", arg, reply)
 	return nil
 }
 

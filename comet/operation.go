@@ -46,7 +46,6 @@ func (operator *DefaultOperator) Connect(p *proto.Proto) (key string, rid int32,
 
 func (operator *DefaultOperator) Disconnect(key string, rid int32) (err error) {
 	var has bool
-	log.Debug("ready to disconnect,key=%s,roomId=%d", key, rid)
 	if has, err = disconnect(key, rid); err != nil {
 		return
 	}

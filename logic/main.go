@@ -31,13 +31,10 @@ func main() {
 	if err := InitKafka(Conf.KafkaAddrs); err != nil {
 		panic(err)
 	}
-	log.Debug("init message")
 	if err := InitMessage(Conf.MessageAddr); err != nil {
 		panic(err)
 	}
-	log.Info("ready http...")
 	if err := InitHTTP(); err != nil {
-		log.Error("damn it,http failed to start...")
 		panic(err)
 	}
 	// block until a signal is received.

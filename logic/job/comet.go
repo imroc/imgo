@@ -77,7 +77,6 @@ func (c *Comet) process(pushChan chan *proto.MPushMsgArg, roomChan chan *proto.B
 	for {
 		select {
 		case pushArg = <-pushChan:
-			log.Debug("call comet push rpc,pushArg=%v", pushArg)
 			// push
 			err = c.rpcClient.Call(CometServiceMPushMsg, pushArg, reply)
 			if err != nil {

@@ -63,7 +63,6 @@ func (r *MessageRPC) SavePrivate(m *proto.MessageSavePrivateArgs, ret *int) erro
 		log.Error("UseStorage.SavePrivate(\"%s\", \"%s\", %d, %d) error(%v)", m.Key, string(m.Msg), m.MsgId, m.Expire, err)
 		return err
 	}
-	log.Debug("UseStorage.SavePrivate(\"%s\", \"%s\", %d, %d) ok", m.Key, string(m.Msg), m.MsgId, m.Expire)
 	return nil
 }
 
@@ -77,7 +76,6 @@ func (r *MessageRPC) SavePrivates(m *proto.MessageSavePrivatesArgs, rw *proto.Me
 		log.Error("UseStorage.SavePrivates(\"%v\", \"%s\", %d, %d) error(%v)", m.Keys, string(m.Msg), m.MsgId, m.Expire, err)
 	}
 	rw.FKeys = fkeys
-	log.Debug("UseStorage.SavePrivates(\"%v\", \"%s\", %d, %d) ok fkeys len(%d)", m.Keys, string(m.Msg), m.MsgId, m.Expire, len(fkeys))
 	return nil
 }
 
@@ -144,7 +142,6 @@ func (r *MessageRPC) DelGroup(key string, ret *int) error {
 
 // Server Ping interface
 func (r *MessageRPC) Ping(arg *proto.NoArg, reply *proto.NoReply) error {
-	//log.Debug("ping ok")
 	return nil
 }
 
@@ -154,6 +151,5 @@ func (r *MessageRPC) SaveToken(t *proto.Token, ret *int) error {
 
 func (r *MessageRPC) GetUid(token string, uid *int64) (err error) {
 	*uid, err = UseStorage.GetUid(token)
-	log.Debug("MessageRPC.GetUid(%s)=%d", token, *uid)
 	return
 }

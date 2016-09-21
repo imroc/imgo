@@ -53,7 +53,6 @@ func (r *RPC) Ping(arg *proto.NoArg, reply *proto.NoReply) error {
 
 // Connect auth and registe login
 func (r *RPC) Connect(arg *proto.ConnArg, reply *proto.ConnReply) (err error) {
-	log.Debug("RPC.Connect(%v)", arg)
 	if arg == nil {
 		err = ErrConnectArgs
 		log.Error("Connect() error(%v)", err)
@@ -64,20 +63,17 @@ func (r *RPC) Connect(arg *proto.ConnArg, reply *proto.ConnReply) (err error) {
 	)
 	res, err := r.auther.Auth(arg.Token)
 	if err != nil {
-		log.Debug("connect failed,token=%v", arg.Token)
 		return
 	}
 	reply.RoomId = res.RoomId
 	if seq, err = connect(res.Uid, arg.Server, reply.RoomId); err == nil {
 		reply.Key = encode(res.Uid, seq)
 	}
-	log.Debug("connect successful,key=%s", reply.Key)
 	return
 }
 
 // Disconnect notice router offline
 func (r *RPC) Disconnect(arg *proto.DisconnArg, reply *proto.DisconnReply) (err error) {
-	log.Debug("RPC.Disconnect(%v)", arg)
 	if arg == nil {
 		err = ErrDisconnectArgs
 		log.Error("Disconnect() error(%v)", err)

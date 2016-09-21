@@ -52,7 +52,6 @@ func connect(p *proto.Proto) (key string, rid int32, heartbeat time.Duration, er
 		arg   = proto.ConnArg{Token: token, Server: Conf.ServerId}
 		reply = proto.ConnReply{}
 	)
-	log.Debug("ready to connect,token=%s", token)
 	if err = logicRpcClient.Call(logicServiceConnect, &arg, &reply); err != nil {
 		log.Error("c.Call(\"%s\", \"%v\", &ret) error(%v)", logicServiceConnect, arg, err)
 		return
@@ -69,7 +68,6 @@ func disconnect(key string, roomId int32) (has bool, err error) {
 		reply = proto.DisconnReply{}
 	)
 	if err = logicRpcClient.Call(logicServiceDisconnect, &arg, &reply); err != nil {
-		log.Error("c.Call(\"%s\", \"%v\", &ret) error(%v)", logicServiceConnect, arg, err)
 		return
 	}
 	has = reply.Has

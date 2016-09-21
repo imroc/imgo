@@ -46,7 +46,6 @@ func InitMessage(bind string) (err error) {
 }
 
 func saveToken(t *proto.Token) error {
-	log.Debug("save token:%v", t)
 	ret := 0
 	if err := rpcClient.Call(messageServiceSaveToken, t, &ret); err != nil {
 		log.Error("c.Call(\"%s\",\"%v\") error(%v)", messageServiceSaveToken, t, err)
