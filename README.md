@@ -1,6 +1,6 @@
 imgo
 ==============
-imgo is a push/IM server writen by golang based on goim.
+Imgo is a push/IM server writen by golang based on goim.You should not use it in production right now,be patient,waiting for a while.
 
 ## Features
  * Light weight
@@ -32,7 +32,7 @@ Websocket: [Websocket Client Demo](https://github.com/imroc/imgo/tree/master/exa
 
 Android: [Android](https://github.com/roamdy/imgo-sdk)
 
-iOS: [iOS](https://github.com/roamdy/imgo-oc-sdk)
+iOS: [iOS](https://github.com/roamdy/goim-oc-sdk)
 
 ## Benchmark
 ![benchmark](./doc/benchmark.jpg)

@@ -1,6 +1,6 @@
 imgo
 ==============
-`imroc/imgo` is a IM and push notification server cluster.
+`imroc/imgo` is a IM and push notification server cluster.You should not use it in production right now,be patient,waiting for a while.
 
 ---------------------------------------
   * [Features](#features)
@@ -34,6 +34,29 @@ $ yum -y install java-1.7.0-openjdk
 ### Install Kafka
 
 Please follow the official quick start [here](http://kafka.apache.org/documentation.html#quickstart).
+
+### Install redis
+```sh
+$ cd /data/programfiles
+$ wget http://download.redis.io/releases/redis-2.8.17.tar.gz
+$ tar -xvf redis-2.8.17.tar.gz -C ./
+$ cd redis-2.8.17/src
+$ make
+$ make test
+$ make install
+$ mkdir /etc/redis
+$ cp /data/programfiles/redis-2.8.17/redis.conf /etc/redis/
+$ cp /data/programfiles/redis-2.8.17/src/redis-server /etc/init.d/redis-server
+$ /etc/init.d/redis-server /etc/redis/redis.conf
+```
+* if following error, see FAQ 2
+```sh
+which: no tclsh8.5 in (/usr/lib64/qt-3.3/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/home/geffzhang/bin)
+You need 'tclsh8.5' in order to run the Redis test
+Make[1]: *** [test] error 1
+make[1]: Leaving directory ‘/data/program files/redis-2.6.4/src’
+Make: *** [test] error 2！
+```
 
 ### Install Golang environment
 

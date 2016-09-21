@@ -1,6 +1,6 @@
 imgo
 ==============
-`imroc/imgo` 是一个支持集群的im及实时推送服务。
+`imroc/imgo` 是一个支持集群的im及实时推送服务,目前还不要用于生产环境,请耐心等待一段时间.
 
 ---------------------------------------
   * [特性](#特性)
@@ -36,7 +36,31 @@ $ yum -y install java-1.7.0-openjdk
 
 kafka在官网已经描述的非常详细，在这里就不过多说明，安装、启动请查看[这里](http://kafka.apache.org/documentation.html#quickstart).
 
-### 三、搭建golang环境
+
+### 三、安装redis
+```sh
+$ cd /data/programfiles
+$ wget http://download.redis.io/releases/redis-2.8.17.tar.gz
+$ tar -xvf redis-2.8.17.tar.gz -C ./
+$ cd redis-2.8.17/src
+$ make
+$ make test
+$ make install
+$ mkdir /etc/redis
+$ cp /data/programfiles/redis-2.8.17/redis.conf /etc/redis/
+$ cp /data/programfiles/redis-2.8.17/src/redis-server /etc/init.d/redis-server
+$ /etc/init.d/redis-server /etc/redis/redis.conf
+```
+* if following error, see FAQ 2
+```sh
+which: no tclsh8.5 in (/usr/lib64/qt-3.3/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/home/geffzhang/bin)
+You need 'tclsh8.5' in order to run the Redis test
+Make[1]: *** [test] error 1
+make[1]: Leaving directory ‘/data/program files/redis-2.6.4/src’
+Make: *** [test] error 2！
+```
+
+### 四、搭建golang环境
 1.下载源码(根据自己的系统下载对应的[安装包](http://golang.org/dl/))
 ```sh
 $ cd /data/programfiles
@@ -54,7 +78,7 @@ export GOPATH=/data/apps/go
 $ source /etc/profile
 ```
 
-### 四、部署imgo
+### 五、部署imgo
 1.下载imgo及依赖包
 ```sh
 $ yum install hg
@@ -89,7 +113,7 @@ $ cp job-log.xml $GOPATH/bin/
 ```
 到此所有的环境都搭建完成！
 
-### 五、启动imgo
+### 六、启动imgo
 ```sh
 $ cd /$GOPATH/bin
 $ nohup $GOPATH/bin/message -c $GOPATH/bin/message.conf 2>&1 > /data/logs/imgo/panic-message.log &
@@ -100,7 +124,7 @@ $ nohup $GOPATH/bin/job -c $GOPATH/bin/job.conf 2>&1 > /data/logs/imgo/panic-job
 ```
 如果启动失败，默认配置可通过查看panic-xxx.log日志文件来排查各个模块问题.
 
-### 六、测试
+### 七、测试
 
 推送协议可查看[push http协议文档](https://github.com/imroc/imgo/blob/master/doc/push.md)
 
@@ -140,6 +164,10 @@ router 属于有状态节点，logic可以使用一致性hash配置节点，增�
 ### job
 
 job 根据kafka的partition来扩展多job工作方式，具体可以参考下kafka的partition负载
+
+### message
+
+message 用于离线消息持久化与拉取,暂时部支持集群,后续版本会增加集群支持.
 
 ##更多
 TODO
