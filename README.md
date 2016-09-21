@@ -30,7 +30,7 @@ Protocol:
 ## Examples
 Websocket: [Websocket Client Demo](https://github.com/imroc/imgo/tree/master/examples/javascript)
 
-Android: [Android](https://github.com/roamdy/imgo-sdk)
+Android: [Android](https://github.com/imroc/imgo-java-sdk)
 
 iOS: [iOS](https://github.com/roamdy/goim-oc-sdk)
 
