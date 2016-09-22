@@ -22,16 +22,12 @@ Protocol:
 [proto](https://github.com/imroc/imgo/blob/master/doc/protocol.png)
 
 ## Document
-[English](./README_en.md)
-
 [中文](./README_cn.md)
 
 ## Examples
 Websocket: [Websocket Client Demo](https://github.com/imroc/imgo/tree/master/examples/javascript)
 
-Android: [Android](https://github.com/imroc/imgo-java-sdk)
-
-iOS: [iOS](https://github.com/roamdy/goim-oc-sdk)
+Java: [Java](https://github.com/imroc/imgo-java-sdk)
 
 ## Benchmark
 ![benchmark](./doc/benchmark.jpg)
