@@ -55,10 +55,10 @@ func handleError() {
 	}
 }
 
-func mpushKafka(serverId int32, keys []string, msg []byte) (err error) {
+func mpushKafka(serverId int32, keys []string, timeStamp int64, msg []byte) (err error) {
 	var (
 		vBytes []byte
-		v      = &proto.KafkaMsg{OP: define.KAFKA_MESSAGE_MULTI, ServerId: serverId, SubKeys: keys, Msg: msg}
+		v      = &proto.KafkaMsg{OP: define.KAFKA_MESSAGE_MULTI, ServerId: serverId, SubKeys: keys, TimeStamp: timeStamp, Msg: msg}
 	)
 	if vBytes, err = json.Marshal(v); err != nil {
 		return

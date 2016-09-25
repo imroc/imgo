@@ -2,7 +2,8 @@ Imgo
 ==============
 Imgo is a distributed and high performance push server written in golang based on [goim](https://github.com/Terry-Mao/goim).
 compared to goim,it added offline message support,add will support IM server later on.
-you should not use it in production right now,be patient,waiting for a while.
+
+Note:imgo is in developing,not stable yet,do not use it in production until its' first release version come out.
 
 ## Features
  * Light weight and high performance
@@ -15,7 +16,13 @@ you should not use it in production right now,be patient,waiting for a while.
  * Asynchronous push notification based on Kafka
 
 ## Architecture
-![arch](https://github.com/imroc/imgo/blob/master/doc/arch.png)
+Client connect to server will be like this:
+
+![arch](https://github.com/imroc/imgo/blob/master/doc/connect.gif)
+
+Push message will be like this:
+
+![arch](https://github.com/imroc/imgo/blob/master/doc/push.gif)
 
 Protocol:
 

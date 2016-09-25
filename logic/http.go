@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"imgo/id"
 	inet "imgo/libs/net"
 	"imgo/libs/proto"
 	"io/ioutil"
@@ -116,6 +115,9 @@ func Push(w http.ResponseWriter, r *http.Request) {
 	//return
 	//}
 
+	//every message have a time stamp as its' id
+	timeStamp := time.Now().UnixNano() / 1e6
+
 	//从router中找出userId对应的连接地址
 	subKeys = genSubKey(userId)
 
@@ -123,7 +125,7 @@ func Push(w http.ResponseWriter, r *http.Request) {
 		args := proto.MessageSavePrivateArgs{
 			Key:    uidStr,
 			Msg:    json.RawMessage(bodyBytes),
-			MsgId:  id.Get(true),
+			MsgId:  timeStamp,
 			Expire: 60 * 60 * 24 * 1,
 		}
 		ret := 0
@@ -138,7 +140,7 @@ func Push(w http.ResponseWriter, r *http.Request) {
 
 	//向userId对应的连接地址发消息,消息先放入kafka队列
 	for serverId, keys = range subKeys {
-		if err = mpushKafka(serverId, keys, bodyBytes); err != nil {
+		if err = mpushKafka(serverId, keys, timeStamp, bodyBytes); err != nil {
 			res["ret"] = InternalErr
 			return
 		}
@@ -162,6 +164,7 @@ func parsePushsBody(body []byte) (msg []byte, userIds []int64, err error) {
 	return
 }
 
+//TODO save offline message when some user not online
 // {"m":{"test":1},"u":"1,2,3"}
 func Pushs(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {

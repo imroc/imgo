@@ -9,7 +9,6 @@ imgo
   * [配置](#配置)
   * [例子](#例子)
   * [文档](#文档)
-  * [集群](#集群)
   * [更多](#更多)
 
 ---------------------------------------
@@ -25,10 +24,7 @@ imgo
  * 基于Kafka做异步消息推送
 
 ##架构
-
-###架构图
-![arch](https://github.com/imroc/imgo/blob/master/doc/arch.png)
-
+TODO
 
 ### comet
 
@@ -168,7 +164,6 @@ iOS: [iOS](https://github.com/roamdy/imgo-oc-sdk)
 ## 文档
 [push http协议文档](https://github.com/imroc/imgo/blob/master/doc/push.md)推送接口
 
-## 集群
 
 ##更多
 TODO
