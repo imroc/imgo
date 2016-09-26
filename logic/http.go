@@ -13,6 +13,8 @@ import (
 	log "github.com/thinkboy/log4go"
 )
 
+const DefaultExpire uint = 60 * 60 * 24
+
 func InitHTTP() (err error) {
 	// http listen
 	var network, addr string
@@ -115,18 +117,16 @@ func Push(w http.ResponseWriter, r *http.Request) {
 	//return
 	//}
 
-	//every message have a time stamp as its' id
-	timeStamp := time.Now().UnixNano() / 1e6
-
 	//从router中找出userId对应的连接地址
 	subKeys = genSubKey(userId)
 
 	if len(subKeys) == 0 { //用户不在线,将消息存入离线消息系统
+		timeStamp := time.Now().UnixNano() / 1e6
 		args := proto.MessageSavePrivateArgs{
 			Key:    uidStr,
-			Msg:    json.RawMessage(bodyBytes),
+			Msg:    bodyBytes,
 			MsgId:  timeStamp,
-			Expire: 60 * 60 * 24 * 1,
+			Expire: DefaultExpire,
 		}
 		ret := 0
 		if err := rpcClient.Call(messageServiceSavePrivate, &args, &ret); err != nil {
@@ -140,7 +140,7 @@ func Push(w http.ResponseWriter, r *http.Request) {
 
 	//向userId对应的连接地址发消息,消息先放入kafka队列
 	for serverId, keys = range subKeys {
-		if err = mpushKafka(serverId, keys, timeStamp, bodyBytes); err != nil {
+		if err = mpushKafka(serverId, keys, bodyBytes); err != nil {
 			res["ret"] = InternalErr
 			return
 		}

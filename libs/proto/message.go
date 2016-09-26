@@ -4,10 +4,10 @@ package proto
 import "encoding/json"
 
 type MessageSavePrivateArgs struct {
-	Key    string          // subscriber key
-	Msg    json.RawMessage // message content
-	MsgId  int64           // message id
-	Expire uint            // message expire second
+	Key    string // subscriber key
+	Msg    []byte // message content
+	MsgId  int64  // message id
+	Expire uint   // message expire second
 }
 
 // Message SavePrivates args
@@ -38,3 +38,27 @@ type Token struct {
 	Token       string
 	Uid, Expire int64
 }
+
+// Message Get args
+type MessageGetPrivateArgs struct {
+	MsgId int64  // message id
+	Key   string // subscriber key
+}
+
+// Message Get Response
+type MessageGetResp struct {
+	Msgs []*Message // messages
+}
+
+// The Message struct
+type Message struct {
+	Msg     []byte `json:"msg"` // message content
+	MsgId   int64  `json:"mid"` // message id
+	GroupId uint   `json:"gid"` // group id
+}
+
+const (
+	// group id
+	PrivateGroupId = 0
+	PublicGroupId  = 1
+)

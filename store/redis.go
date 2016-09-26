@@ -17,14 +17,14 @@
 package main
 
 import (
+	"encoding/binary"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"gopush-cluster/ketama"
-	myrpc "gopush-cluster/rpc"
+	"imgo/libs/proto"
 	"strconv"
 	"strings"
-	"time"
 
 	log "code.google.com/p/log4go"
 	"github.com/garyburd/redigo/redis"
@@ -101,28 +101,39 @@ func NewRedisStorage() *RedisStorage {
 }
 
 // SavePrivate implements the Storage SavePrivate method.
-func (s *RedisStorage) SavePrivate(key string, msg json.RawMessage, mid int64, expire uint) error {
-	rm := &RedisPrivateMessage{Msg: msg, Expire: int64(expire) + time.Now().Unix()}
-	m, err := json.Marshal(rm)
-	if err != nil {
-		log.Error("json.Marshal() key:\"%s\" error(%v)", key, err)
-		return err
-	}
+func (s *RedisStorage) SavePrivate(key string, msg []byte, mid int64, expire uint) (err error) {
+	//rm := &RedisPrivateMessage{Msg: msg, Expire: int64(expire) + time.Now().Unix()}
+	//m, err := json.Marshal(rm)
+	//if err != nil {
+	//log.Error("json.Marshal() key:\"%s\" error(%v)", key, err)
+	//return err
+	//}
 	conn := s.getConn(key)
 	if conn == nil {
 		return RedisNoConnErr
 	}
 	defer conn.Close()
-	if err = conn.Send("ZADD", key, mid, m); err != nil {
-		log.Error("conn.Send(\"ZADD\", \"%s\", %d, \"%s\") error(%v)", key, mid, string(m), err)
+	msgSave := make([]byte, len(msg)+8)
+	binary.BigEndian.PutUint64(msgSave, uint64(mid))
+	copy(msgSave[8:], msg)
+	if err = conn.Send("ZADD", key, mid, msgSave); err != nil {
+		log.Error("conn.Send(\"ZADD\", \"%s\", %d, \"%s\") error(%v)", key, mid, string(msg), err)
 		return err
 	}
 	if err = conn.Send("ZREMRANGEBYRANK", key, 0, -1*(Conf.RedisMaxStore+1)); err != nil {
 		log.Error("conn.Send(\"ZREMRANGEBYRANK\", \"%s\", 0, %d) error(%v)", key, -1*(Conf.RedisMaxStore+1), err)
 		return err
 	}
+	if err = conn.Send("EXPIRE", key, expire); err != nil {
+		log.Error("conn.Send(\"EXPIRE\", \"%s\", %d) error(%v)", key, expire, err)
+		return err
+	}
 	if err = conn.Flush(); err != nil {
 		log.Error("conn.Flush() error(%v)", err)
+		return err
+	}
+	if _, err = conn.Receive(); err != nil {
+		log.Error("conn.Receive() error(%v)", err)
 		return err
 	}
 	if _, err = conn.Receive(); err != nil {
@@ -158,13 +169,6 @@ func (s *RedisStorage) SavePrivates(keys []string, msg json.RawMessage, mid int6
 			fkeys = append(fkeys, k)
 		}
 	}()
-	// raw msg
-	rm := &RedisPrivateMessage{Msg: msg, Expire: int64(expire) + time.Now().Unix()}
-	m, err := json.Marshal(rm)
-	if err != nil {
-		log.Error("json.Marshal() key:\"%s\" error(%v)", keys, err)
-		return
-	}
 	// batch
 	for n, k := range nodes {
 		conn := s.getConnByNode(n)
@@ -175,14 +179,19 @@ func (s *RedisStorage) SavePrivates(keys []string, msg json.RawMessage, mid int6
 		}
 		// pipeline batch msgs
 		for _, key := range k {
-			if err = conn.Send("ZADD", key, mid, m); err != nil {
+			if err = conn.Send("ZADD", key, mid, []byte(msg)); err != nil {
 				conn.Close()
-				log.Error("conn.Send(\"ZADD\", \"%s\", %d, \"%s\") error(%v)", key, mid, string(m), err)
+				log.Error("conn.Send(\"ZADD\", \"%s\", %d, \"%s\") error(%v)", key, mid, string(msg), err)
 				return
 			}
 			if err = conn.Send("ZREMRANGEBYRANK", key, 0, -1*(Conf.RedisMaxStore+1)); err != nil {
 				conn.Close()
 				log.Error("conn.Send(\"ZREMRANGEBYRANK\", \"%s\", 0, %d) error(%v)", key, -1*(Conf.RedisMaxStore+1), err)
+				return
+			}
+			if err = conn.Send("EXPIRE", key, expire); err != nil {
+				conn.Close()
+				log.Error("conn.Send(\"EXPIRE\", \"%s\", %d) error(%v)", key, expire, err)
 				return
 			}
 		}
@@ -206,6 +215,11 @@ func (s *RedisStorage) SavePrivates(keys []string, msg json.RawMessage, mid int6
 				log.Error("conn.Receive() error(%v)", err)
 				return
 			}
+			if _, err = conn.Receive(); err != nil {
+				conn.Close()
+				log.Error("conn.Receive() error(%v)", err)
+				return
+			}
 		}
 		conn.Close()
 	}
@@ -213,7 +227,7 @@ func (s *RedisStorage) SavePrivates(keys []string, msg json.RawMessage, mid int6
 }
 
 // GetPrivate implements the Storage GetPrivate method.
-func (s *RedisStorage) GetPrivate(key string, mid int64) ([]*myrpc.Message, error) {
+func (s *RedisStorage) GetPrivate(key string, mid int64) ([]*proto.Message, error) {
 	conn := s.getConn(key)
 	if conn == nil {
 		return nil, RedisNoConnErr
@@ -224,9 +238,9 @@ func (s *RedisStorage) GetPrivate(key string, mid int64) ([]*myrpc.Message, erro
 		log.Error("conn.Do(\"ZRANGEBYSCORE\", \"%s\", \"%d\", \"+inf\", \"WITHSCORES\") error(%v)", key, mid, err)
 		return nil, err
 	}
-	msgs := make([]*myrpc.Message, 0, len(values))
-	delMsgs := []int64{}
-	now := time.Now().Unix()
+	msgs := make([]*proto.Message, 0, len(values))
+	//delMsgs := []int64{}
+	//now := time.Now().Unix()
 	for len(values) > 0 {
 		cmid := int64(0)
 		b := []byte{}
@@ -235,28 +249,19 @@ func (s *RedisStorage) GetPrivate(key string, mid int64) ([]*myrpc.Message, erro
 			log.Error("redis.Scan() error(%v)", err)
 			return nil, err
 		}
-		rm := &RedisPrivateMessage{}
-		if err = json.Unmarshal(b, rm); err != nil {
-			log.Error("json.Unmarshal(\"%s\", rm) error(%v)", string(b), err)
-			delMsgs = append(delMsgs, cmid)
-			continue
-		}
-		// check expire
-		if rm.Expire < now {
-			log.Warn("user_key: \"%s\" msg: %d expired", key, cmid)
-			delMsgs = append(delMsgs, cmid)
-			continue
-		}
-		m := &myrpc.Message{MsgId: cmid, Msg: rm.Msg, GroupId: myrpc.PrivateGroupId}
+		m := &proto.Message{MsgId: cmid, Msg: b[8:], GroupId: proto.PrivateGroupId}
 		msgs = append(msgs, m)
 	}
-	// delete unmarshal failed and expired message
-	if len(delMsgs) > 0 {
-		select {
-		case s.delCH <- &RedisDelMessage{Key: key, MIds: delMsgs}:
-		default:
-			log.Warn("user_key: \"%s\" send del messages failed, channel full", key)
+	if len(msgs) > 0 {
+		//TODO 删除
+		n, err := redis.Int(conn.Do("DEL", key))
+		if err != nil {
+			return nil, err
 		}
+		if n == 0 {
+			return nil, nil
+		}
+
 	}
 	return msgs, nil
 }
@@ -300,10 +305,8 @@ func delOldToken(conn redis.Conn, uid int64, token string) error {
 		return err
 	}
 	if !exist {
-		log.Debug("没有旧token:%d", uid)
 		return nil
 	}
-	log.Debug("有旧token,删掉:%d", uid)
 	//删除旧token
 	_, err = conn.Do("DEL", uidKey)
 	if err != nil {
@@ -313,7 +316,6 @@ func delOldToken(conn redis.Conn, uid int64, token string) error {
 	if err != nil {
 		return err
 	}
-	log.Debug("旧token已删除:%d-%s", uid, token)
 	return nil
 }
 
@@ -343,7 +345,6 @@ func (s *RedisStorage) SaveToken(uid int64, token string, expire int64) (err err
 	if err != nil {
 		return
 	}
-	log.Debug("save uid2token:%s->%s", uidKey, token)
 
 	// token-->uid
 	tokenKey := formatTokenKey(token)
@@ -355,7 +356,6 @@ func (s *RedisStorage) SaveToken(uid int64, token string, expire int64) (err err
 	if err != nil {
 		return
 	}
-	log.Debug("save token2uid:%s->%d", tokenKey, uid)
 	return nil
 }
 

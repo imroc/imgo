@@ -1,7 +1,7 @@
 package main
 
 import (
-	myrpc "gopush-cluster/rpc"
+	"imgo/libs/proto"
 	"net/http"
 	"strconv"
 	"time"
@@ -52,7 +52,7 @@ func GetOfflineMsg(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var msgs []*myrpc.Message
+	var msgs []*proto.Message
 	msgs, err = UseStorage.GetPrivate(uidStr, mid)
 	if err != nil {
 		res["ret"] = InternalErr

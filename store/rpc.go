@@ -79,66 +79,19 @@ func (r *MessageRPC) SavePrivates(m *proto.MessageSavePrivatesArgs, rw *proto.Me
 	return nil
 }
 
-//// GetPrivate rpc interface get user private message.
-//func (r *MessageRPC) GetPrivate(m *proto.MessageGetPrivateArgs, rw *proto.MessageGetResp) error {
-//log.Debug("messageRPC.GetPrivate key:\"%s\" mid:\"%d\"", m.Key, m.MsgId)
-//if m == nil || m.Key == "" || m.MsgId < 0 {
-//return proto.ErrParam
-//}
-//msgs, err := UseStorage.GetPrivate(m.Key, m.MsgId)
-//if err != nil {
-//log.Error("UseStorage.GetPrivate(\"%s\", %d) error(%v)", m.Key, m.MsgId, err)
-//return err
-//}
-//rw.Msgs = msgs
-//log.Debug("UserStorage.GetPrivate(\"%s\", %d) ok", m.Key, m.MsgId)
-//return nil
-//}
-
-//// DelPrivate rpc interface delete user private message.
-//func (r *MessageRPC) DelPrivate(key string, ret *int) error {
-//if key == "" {
-//return proto.ErrParam
-//}
-//if err := UseStorage.DelPrivate(key); err != nil {
-//log.Error("UserStorage.DelPrivate(\"%s\") error(%v)", key, err)
-//return err
-//}
-//log.Debug("UserStorage.DelPrivate(\"%s\") ok", key)
-//return nil
-//}
-
-/*
-// SavePublish rpc interface save publish message.
-func (r *MessageRPC) SavePublish(m *proto.MessageSaveGroupArgs, ret *int) error {
+// GetPrivate rpc interface get user private message.
+func (r *MessageRPC) GetPrivate(m *proto.MessageGetPrivateArgs, rw *proto.MessageGetResp) error {
+	if m == nil || m.Key == "" || m.MsgId < 0 {
+		return proto.ErrParam
+	}
+	msgs, err := UseStorage.GetPrivate(m.Key, m.MsgId)
+	if err != nil {
+		log.Error("UseStorage.GetPrivate(\"%s\", %d) error(%v)", m.Key, m.MsgId, err)
+		return err
+	}
+	rw.Msgs = msgs
 	return nil
 }
-
-// GetPublish rpc interface get publish message.
-func (r *MessageRPC) GetPublish(m *proto.MessageGetGroupArgs, rw *proto.MessageGetResp) error {
-	return nil
-}
-
-// DelPublish rpc interface delete publish message.
-func (r *MessageRPC) DelPublish(key string, ret *int) error {
-	return nil
-}
-
-// SaveGroup rpc interface save publish message.
-func (r *MessageRPC) SaveGroup(m *proto.MessageSaveGroupArgs, ret *int) error {
-	return nil
-}
-
-// GetPublish rpc interface get publish message.
-func (r *MessageRPC) GetGroup(m *proto.MessageGetGroupArgs, rw *proto.MessageGetResp) error {
-	return nil
-}
-
-// DelPublish rpc interface delete publish message.
-func (r *MessageRPC) DelGroup(key string, ret *int) error {
-	return nil
-}
-*/
 
 // Server Ping interface
 func (r *MessageRPC) Ping(arg *proto.NoArg, reply *proto.NoReply) error {

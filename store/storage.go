@@ -19,14 +19,14 @@ package main
 import (
 	"encoding/json"
 	"errors"
-	"gopush-cluster/rpc"
+	"imgo/libs/proto"
 )
 
 const (
 	RedisStorageType = "redis"
-	MySQLStorageType = "mysql"
-	ketamaBase       = 255
-	saveBatchNum     = 1000
+	//MySQLStorageType = "mysql"
+	ketamaBase   = 255
+	saveBatchNum = 1000
 )
 
 var (
@@ -37,9 +37,9 @@ var (
 // Stored messages interface
 type Storage interface {
 	// GetPrivate get private msgs.
-	GetPrivate(key string, mid int64) ([]*rpc.Message, error)
+	GetPrivate(key string, mid int64) ([]*proto.Message, error)
 	// SavePrivate Save single private msg.
-	SavePrivate(key string, msg json.RawMessage, mid int64, expire uint) error
+	SavePrivate(key string, msg []byte, mid int64, expire uint) error
 	// Save private msgs return failed keys.
 	SavePrivates(keys []string, msg json.RawMessage, mid int64, expire uint) ([]string, error)
 	// DelPrivate delete private msgs.
