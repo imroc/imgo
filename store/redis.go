@@ -102,12 +102,6 @@ func NewRedisStorage() *RedisStorage {
 
 // SavePrivate implements the Storage SavePrivate method.
 func (s *RedisStorage) SavePrivate(key string, msg []byte, mid int64, expire uint) (err error) {
-	//rm := &RedisPrivateMessage{Msg: msg, Expire: int64(expire) + time.Now().Unix()}
-	//m, err := json.Marshal(rm)
-	//if err != nil {
-	//log.Error("json.Marshal() key:\"%s\" error(%v)", key, err)
-	//return err
-	//}
 	conn := s.getConn(key)
 	if conn == nil {
 		return RedisNoConnErr
@@ -239,8 +233,6 @@ func (s *RedisStorage) GetPrivate(key string, mid int64) ([]*proto.Message, erro
 		return nil, err
 	}
 	msgs := make([]*proto.Message, 0, len(values))
-	//delMsgs := []int64{}
-	//now := time.Now().Unix()
 	for len(values) > 0 {
 		cmid := int64(0)
 		b := []byte{}

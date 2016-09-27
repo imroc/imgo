@@ -109,15 +109,7 @@ func Push(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//rm := json.RawMessage(bodyBytes)
-	//msg, err := rm.MarshalJSON()
-	//if err != nil {
-	//res["ret"] = ParamErr
-	//log.Error("json.RawMessage(\"%s\").MarshalJSON() error(%v)", body, err)
-	//return
-	//}
-
-	//从router中找出userId对应的连接地址
+	//get userId from router
 	subKeys = genSubKey(userId)
 
 	if len(subKeys) == 0 { //用户不在线,将消息存入离线消息系统
