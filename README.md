@@ -3,7 +3,6 @@ Imgo
 Imgo is a distributed and high performance push server written in golang based on [goim](https://github.com/Terry-Mao/goim).
 compared to goim,it added offline message support,add will support IM server later on.
 
-Note:imgo is in developing,not stable yet,do not use it in production until its' first release version come out.
 
 ## Features
  * Light weight and high performance
@@ -16,13 +15,29 @@ Note:imgo is in developing,not stable yet,do not use it in production until its'
  * Asynchronous push notification based on Kafka
 
 ## Architecture
-Client connect to server will be like this:
+Client connect to server:
 
 ![arch](https://github.com/imroc/imgo/blob/master/doc/connect.gif)
 
-Push message will be like this:
+A client wants to subscribe a channel on comet through tcp or websocket,comet tells logic: "Here comes a guy,shall I keep a connection with him ?".
+Logic take the token from comet and showed it to store: "Is this token valid? If it is,tell me the user id".
+Logic got the user id,told router this user is online and keeps a connection with that comet,and told comet:"yes, you shall".
+Then comet keeps connect to that client,and matains a heartbeat with him.
+Logic knowed that comet and client was keep a connection, he ask store:"Is there any offline message of that user ?","yes,three of it",store answered and gave these to logic.
+Logic packed the message into an envelope and thrown to kafka.
+Job found a new envelope in kafka,fetch it and read the address:"comet 1,user 123456",then he told comet 1:"tell this to user 123456".
+At last,Comet told this message to user 123456.
+
+
+Server push message to client:
 
 ![arch](https://github.com/imroc/imgo/blob/master/doc/push.gif)
+
+Caller(usually a bussiness system) tells logic:"I want to send hello to a person,his user id is 123456".
+Logic got the user id,ask router:"Is user 123456 online ?","yes,he is keeping a connection with comet 1" router replied.
+Logic packed the message into an envelope and thrown to kafka.
+Job found a new envelope in kafka,fetch it and read the address:"comet 1,user 123456",then he told comet 1:"tell this to user 123456".
+At last,Comet told this message to user 123456.
 
 Protocol:
 
