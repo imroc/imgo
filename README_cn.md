@@ -159,7 +159,7 @@ Websocket: [Websocket Client Demo](https://github.com/imroc/imgo/tree/master/exa
 
 Android: [Android](https://github.com/imroc/imgo-java-sdk)
 
-iOS: [iOS](https://github.com/roamdy/imgo-oc-sdk)
+iOS: [iOS](https://github.com/roamdy/goim-oc-sdk)
 
 ## 文档
 [push http协议文档](https://github.com/imroc/imgo/blob/master/doc/push.md)推送接口
