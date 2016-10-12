@@ -46,9 +46,9 @@ router 属于有状态节点，logic可以使用一致性hash配置节点，增�
 
 job 根据kafka的partition来扩展多job工作方式，具体可以参考下kafka的partition负载
 
-### message
+### store
 
-message 用于离线消息持久化与拉取,暂时不支持集群,后续版本会增加集群支持.
+store 用于离线消息持久化与拉取,暂时不支持集群,后续版本会增加集群支持.
 
 
 ## 安装
@@ -59,7 +59,7 @@ kafka自带zookeeper，它们都依赖java，所以如果没有请先安装java�
 kafka的安装在官网已经描述的非常详细，在这里就不过多说明，安装、启动请查看[这里](http://kafka.apache.org/documentation.html#quickstart).
 
 
-### Redis(离线消息系统message模块需要用到的)
+### Redis(离线消息系统store模块需要用到的)
 ```sh
 $ wget http://download.redis.io/releases/redis-stable.tar.gz
 $ tar -xvf redis-stable.tar.gz
@@ -109,16 +109,16 @@ $ cd $GOPATH/src/imgo
 $ go get ./...
 ```
 
-2.安装message、router、logic、comet、job模块(配置文件请依据实际机器环境配置)
+2.安装store、router、logic、comet、job模块(配置文件请依据实际机器环境配置)
 ```sh
 $ cd $GOPATH/src/imgo/router
 $ go install
 $ cp router.conf $GOPATH/bin/router.conf
 $ cp router-log.xml $GOPATH/bin/
-$ cd ../message/
+$ cd ../store/
 $ go install
-$ cp message.conf $GOPATH/bin/message.conf
-$ cp message-log.xml $GOPATH/bin/
+$ cp store.conf $GOPATH/bin/store.conf
+$ cp store-log.xml $GOPATH/bin/
 $ cd ../logic/
 $ go install
 $ cp logic-example.conf $GOPATH/bin/logic.conf
@@ -137,7 +137,7 @@ $ cp job-log.xml $GOPATH/bin/
 ### 启动imgo
 ```sh
 $ cd /$GOPATH/bin
-$ nohup $GOPATH/bin/message -c $GOPATH/bin/message.conf 2>&1 > /data/logs/imgo/panic-message.log &
+$ nohup $GOPATH/bin/message -c $GOPATH/bin/store.conf 2>&1 > /data/logs/imgo/panic-store.log &
 $ nohup $GOPATH/bin/router -c $GOPATH/bin/router.conf 2>&1 > /data/logs/imgo/panic-router.log &
 $ nohup $GOPATH/bin/logic -c $GOPATH/bin/logic.conf 2>&1 > /data/logs/imgo/panic-logic.log &
 $ nohup $GOPATH/bin/comet -c $GOPATH/bin/comet.conf 2>&1 > /data/logs/imgo/panic-comet.log &
@@ -157,7 +157,7 @@ TODO
 
 Websocket: [Websocket Client Demo](https://github.com/imroc/imgo/tree/master/examples/javascript)
 
-Android: [Android](https://github.com/roamdy/imgo-sdk)
+Android: [Android](https://github.com/imroc/imgo-java-sdk)
 
 iOS: [iOS](https://github.com/roamdy/imgo-oc-sdk)
 
